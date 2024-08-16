@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
+// Interface to access "VerifyOrigin" contract
+interface IVerifyOrigin {
+    function proofVerified(address user) external view returns (bool);
+}
+
 contract Prediction {
     // User Bet Structure
     struct Bet {
@@ -19,6 +24,11 @@ contract Prediction {
     }
 
     Event[] public events;
+    address public verifyOriginAddress;
+
+    constructor(address _verifyOriginAddress) {
+        verifyOriginAddress = _verifyOriginAddress;
+    }
 
     function createEvent(string memory description) public {
         Event storage newEvent = events.push();
@@ -95,8 +105,20 @@ contract Prediction {
             "Event outcome has not been set"
         );
         Bet storage userBet = eventToClaim.bets[msg.sender];
-        require(!userBet.claimed, "Winnings already claimed");
-        require(userBet.amount > 0, "You did not bet on this event");
+        require(
+            !userBet.claimed,
+            "Winnings already claimed"
+        );
+        require(
+            userBet.amount > 0,
+            "You did not bet on this event"
+        );
+        // Check if the user has verified their proof
+        IVerifyOrigin verifier = IVerifyOrigin(verifyOriginAddress);
+        require(
+            verifier.proofVerified(msg.sender),
+            "ZK Proof not verified"
+        );
 
         // Ensure the user's prediction was correct
         if (userBet.predictedOutcome == eventToClaim.outcome) {
