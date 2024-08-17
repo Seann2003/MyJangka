@@ -1,6 +1,7 @@
 "use client";
 
 import Marketplace from "@/components/marketplace";
+import Navbar2 from "@/components/Navbar2";
 import SearchBar from "@/components/searchBar";
 import {
   Carousel,
@@ -36,9 +37,10 @@ export default function Home() {
 
   return (
     <main className="h-screen w-[99%] flex flex-col items-center ">
-      <div className="items-center flex flex-col ">
+      <Navbar2 />
+      <div className="items-center flex flex-col">
         <div className="flex flex-col gap-4 justify-center text-center w-[70%] mb-4">
-          <div className="pt-9 relative">
+          <div className="relative">
             <div className="flex justify-center">
               <Carousel
                 opts={{
@@ -86,8 +88,9 @@ export default function Home() {
                 </button>
               ))}
             </div>
+            <SearchBar />
           </div>
-          <SearchBar />
+
           <div className="p-4">
             <Marketplace />
           </div>

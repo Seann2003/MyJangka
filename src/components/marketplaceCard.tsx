@@ -39,7 +39,7 @@ export const MarketplaceGridItem = ({
   return (
     <div
       className={cn(
-        "mb-4 rounded-xl hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-4 dark:bg-black dark:border-white/[0.2] bg-white border border-transparent justify-between w-full gap-4 flex flex-col hover: hover:brightness-110"
+        "mb-4 rounded-xl hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-4 dark:bg-black dark:border-white/[0.2] bg-white border border-transparent justify-between w-full flex flex-col hover: hover:brightness-110"
       )}
     >
       <div className=" transition duration-200">
@@ -48,22 +48,24 @@ export const MarketplaceGridItem = ({
           {title}
         </div>
       </div>
-      <Progress value={((yes ?? 0) / (totalParticipants ?? 1)) * 100} />
-      <div className="flex flex-row gap-4">
-        <button className="px-3 py-1 w-full rounded-md hover:bg-green-500 hover:text-white font-light transition duration-200 bg-secondary text-green-500 border-2">
-          Bet Yes
-        </button>
+      <div className="gap-4 flex flex-col">
+        <Progress value={((yes ?? 0) / (totalParticipants ?? 1)) * 100} />
+        <div className="flex flex-row gap-4">
+          <button className="px-3 py-1 w-full rounded-md hover:bg-green-500 hover:text-white font-light transition duration-200 bg-secondary text-green-500 border-2">
+            Predict Yes
+          </button>
 
-        <button className="px-3 py-1 w-full rounded-md hover:bg-red-500 hover:text-white font-light transition duration-200 bg-secondary text-red-500 border-2">
-          Bet No
-        </button>
-      </div>
-      <div className="flex flex-row items-center justify-between mt-auto text-sm">
-        <div className="font-sans font-medium text-neutral-600 dark:text-neutral-300 flex items-center">
-          <MdPerson className="h-5 w-5 mr-1" />
-          <span>{totalParticipants}</span>
+          <button className="px-3 py-1 w-full rounded-md hover:bg-red-500 hover:text-white font-light transition duration-200 bg-secondary text-red-500 border-2">
+            Predict No
+          </button>
         </div>
-        <div> {totalAmount} Bet</div>
+        <div className="flex flex-row items-center justify-between mt-auto text-sm">
+          <div className="font-sans font-medium text-neutral-600 dark:text-neutral-300 flex items-center">
+            <MdPerson className="h-5 w-5 mr-1" />
+            <span>{totalParticipants}</span>
+          </div>
+          <div> {totalAmount} Bet</div>
+        </div>
       </div>
     </div>
   );
