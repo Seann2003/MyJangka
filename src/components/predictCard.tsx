@@ -57,11 +57,11 @@ export const CardItem = ({
       <div className="flex flex-col gap-4">
         <div className="flex justify-between gap-3">
           <button className="px-3 py-1 w-full rounded-md hover:bg-green-500 hover:text-white font-light transition duration-200 bg-secondary text-green-500 border-2">
-            Bet Yes
+            Predict Yes
           </button>
 
           <button className="px-3 py-1 w-full rounded-md hover:bg-red-500 hover:text-white font-light transition duration-200 bg-secondary text-red-500 border-2 ">
-            Bet No
+            Predict No
           </button>
         </div>
         <div className="flex flex-row items-center justify-between mt-auto text-sm">
