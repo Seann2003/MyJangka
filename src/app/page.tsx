@@ -1,8 +1,6 @@
 import Image from "next/image";
 import { ConnectButton } from "thirdweb/react";
-import thirdwebIcon from "@public/thirdweb.svg";
 import { client } from "./client";
-import { motion } from "framer-motion";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import PredictionMarketPreview from "@/components/predictionMarketPreview";
 
