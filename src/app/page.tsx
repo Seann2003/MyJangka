@@ -20,8 +20,8 @@ export default function Home() {
               }}
             />
           </div>
-          <div className=" mx-auto m-8 mb-12">
-            <p className="relative z-10 text-lg md:text-4xl bg-clip-text text-transparent bg-white text-center font-sans font-bold">
+          <div className=" mx-auto m-8 mb-12 pb-4">
+            <p className="relative z-10 text-2xl bg-clip-text text-transparent bg-white text-center font-sans font-light">
               Predict, Profit, and Prosper in Malaysian style.
             </p>
           </div>

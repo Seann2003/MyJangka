@@ -1,6 +1,7 @@
 "use client";
 
 import Marketplace from "@/components/marketplace";
+import SearchBar from "@/components/searchBar";
 import {
   Carousel,
   CarouselContent,
@@ -35,9 +36,8 @@ export default function Home() {
 
   return (
     <main className="h-screen w-[99%] flex flex-col items-center ">
-      <div>Header</div>
-      <div className="items-center flex flex-col">
-        <div className="flex flex-col gap-4 justify-center text-center w-[70%] ">
+      <div className="items-center flex flex-col ">
+        <div className="flex flex-col gap-4 justify-center text-center w-[70%] mb-4">
           <div className="pt-9 relative">
             <div className="flex justify-center">
               <Carousel
@@ -70,21 +70,24 @@ export default function Home() {
           </div>
         </div>
         <div className="flex-1 w-full">
-          <div className="flex border-b">
-            {tabs.map((tab) => (
-              <button
-                key={tab}
-                className={`px-4 py-2 ${
-                  activeTab === tab
-                    ? "transition-all border-b-2 border-blue-500 font-bold text-white"
-                    : "text-gray-400"
-                }`}
-                onClick={() => setActiveTab(tab)}
-              >
-                {tab}
-              </button>
-            ))}
+          <div className="flex border-b flex-row justify-between">
+            <div>
+              {tabs.map((tab) => (
+                <button
+                  key={tab}
+                  className={`px-4 py-2 ${
+                    activeTab === tab
+                      ? "transition-all border-b-2 border-blue-500 font-bold text-white"
+                      : "text-gray-400"
+                  }`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
           </div>
+          <SearchBar />
           <div className="p-4">
             <Marketplace />
           </div>
