@@ -2,8 +2,8 @@
 pragma solidity ^0.8.19;
 
 // Interface to access "VerifyOrigin" contract
-interface IVerifyOrigin {
-    function proofVerified(address user) external view returns (bool);
+interface IReputationSystem {
+    function getReputation(address user) external view returns (uint256);
 }
 
 contract Prediction {
@@ -15,27 +15,31 @@ contract Prediction {
     }
     // Event Structure
     struct Event {
-        string description;
+        string title;
         bool isOpen;            // Whether the event is open for betting
         bool outcomeSet;        // Whether the outcome of the event has been set
         bool outcome;
         uint256 totalAmount;
+        uint256 totalPositiveBet;
+        uint256 totalNegativeBet;
+        uint256 reputationRequirement; // Reputation requirement to join the prediction
         mapping(address => Bet) bets;  // Mapping to store bets by users
     }
 
     Event[] public events;
-    address public verifyOriginAddress;
+    address public reputationAddress;
 
-    constructor(address _verifyOriginAddress) {
-        verifyOriginAddress = _verifyOriginAddress;
+    constructor(address _reputationAddress) {
+        reputationAddress = _reputationAddress;
     }
 
-    function createEvent(string memory description) public {
+    function createEvent(string memory title) public {
         Event storage newEvent = events.push();
-        newEvent.description = description;
+        newEvent.title = title;
         newEvent.isOpen = true;
         newEvent.outcomeSet = false;
         newEvent.totalAmount = 0;
+        newEvent.reputationRequirement = 0;
     }
 
     function bet(uint eventId, bool predictedOutcome) public payable {
@@ -54,6 +58,12 @@ contract Prediction {
             msg.value > 0, 
             "Invalid betting amount, please try again"
         );
+        // Check if user has enough reputation points
+        IReputationSystem verifier = IReputationSystem(reputationAddress);
+        require(
+            verifier.getReputation(msg.sender) >= eventToBet.reputationRequirement,
+            "Insufficient reputation points, please try other events"
+        );
         // Add on existing bets, if any
         if (eventToBet.bets[msg.sender].amount != 0) {
             Bet storage userBet = eventToBet.bets[msg.sender];
@@ -69,10 +79,16 @@ contract Prediction {
                 claimed: false
             });
         }
-        // Add on the value to total price pool
-        eventToBet.totalAmount += msg.value;
-        // Transfer the money to account
-        payable(address(this)).transfer(msg.value);
+        uint256 betAmount = msg.value * 95 / 100;
+        if (predictedOutcome) {
+            eventToBet.totalPositiveBet += betAmount;
+        } else {
+            eventToBet.totalNegativeBet += betAmount;
+        }
+        // Add on 95% of value to total price pool
+        eventToBet.totalAmount += betAmount;
+        // Transfer the money to account (5% commission)
+        payable(address(this)).transfer(msg.value - betAmount);
     }
 
     function closeEvent(uint eventId, bool outcome) public {
@@ -104,6 +120,7 @@ contract Prediction {
             eventToClaim.outcomeSet,
             "Event outcome has not been set"
         );
+
         Bet storage userBet = eventToClaim.bets[msg.sender];
         require(
             !userBet.claimed,
@@ -113,51 +130,19 @@ contract Prediction {
             userBet.amount > 0,
             "You did not bet on this event"
         );
-        // Check if the user has verified their proof
-        IVerifyOrigin verifier = IVerifyOrigin(verifyOriginAddress);
-        require(
-            verifier.proofVerified(msg.sender),
-            "ZK Proof not verified"
-        );
-
         // Ensure the user's prediction was correct
-        if (userBet.predictedOutcome == eventToClaim.outcome) {
-            // Calculate the total amount to be distributed (85% of the total pool) - To be change
-            uint256 totalAmountToDistribute = (eventToClaim.totalAmount * 85) / 100;
-
-            // Calculate the winner's share of the total pool
-            uint256 winnings = (totalAmountToDistribute * userBet.amount) / eventToClaim.totalAmount;
-
-            // Mark winnings as claimed
-            userBet.claimed = true;
-
-            // Transfer the winnings to the user
-            payable(msg.sender).transfer(winnings);
-        }
-    }
-
-    // Handle 10% and 5% transfers to own account and beneficiary
-    function distributeFees(uint eventId, address payable ownerAccount, address payable beneficiaryAccount) public {
         require(
-            eventId < events.length,
-            "Invalid event ID"
-        );
-        Event storage eventToClaim = events[eventId];
-        require(
-            !eventToClaim.isOpen,
-            "Event is still open"
-        );
-        require(
-            eventToClaim.outcomeSet,
-            "Event outcome has not been set"
+            userBet.predictedOutcome == eventToClaim.outcome,
+            "Incorrect prediction"
         );
 
-        // Calculate the 10% and 5% amounts
-        uint256 ownerFee = (eventToClaim.totalAmount * 10) / 100;
-        uint256 beneficiaryFee = (eventToClaim.totalAmount * 5) / 100;
+        // Calculate the winner's share of the total pool based on their bet
+        uint256 winnings = (eventToClaim.totalAmount * userBet.amount) / (eventToClaim.outcome ? eventToClaim.totalPositiveBet : eventToClaim.totalNegativeBet);
 
-        // Transfer to owner and charity
-        ownerAccount.transfer(ownerFee);
-        beneficiaryAccount.transfer(beneficiaryFee);
+        // Mark winnings as claimed
+        userBet.claimed = true;
+
+        // Transfer the winnings to the user
+        payable(msg.sender).transfer(winnings);
     }
 }
