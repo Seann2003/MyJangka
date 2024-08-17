@@ -10,17 +10,6 @@ contract PredictionTest is Test {
     PlonkVerifier public pv;
     VerifyOrigin public vo;
     Prediction public pd;
-        // // Deploy PlonkVerifier contract
-        // PlonkVerifier pv = new PlonkVerifier();
-        // console.log("PlonkVerifier deployed at:", address(pv));
-
-        // // Deploy VerifyOrigin contract
-        // VerifyOrigin vo = new VerifyOrigin(address(pv));
-        // console.log("VerifyOrigin deployed at:", address(vo));
-
-        // // Deploy Prediction contract
-        // Prediction pd = new Prediction(address(vo));
-        // console.log("Prediction deployed at:", address(pd));
 
     function setUp() public {
         pv = new PlonkVerifier();
