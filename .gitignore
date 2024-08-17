@@ -18,6 +18,10 @@ docs/
 .pnp.js
 .yarn/install-state.gz
 
+# Specifically exclude .env and node_modules in the server folder
+/server/.env
+/server/node_modules
+
 # testing
 /coverage
 
