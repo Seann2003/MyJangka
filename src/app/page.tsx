@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ConnectButton } from "thirdweb/react";
 import { client } from "./client";
 import { BackgroundBeams } from "@/components/ui/background-beams";
+import { GetStartedButton } from "@/components/getStartedButton";
 import PredictionMarketPreview from "@/components/predictionMarketPreview";
 
 export default function Home() {
@@ -28,13 +29,7 @@ export default function Home() {
           </div>
 
           <div className="flex justify-center mb-20 z-10">
-            <ConnectButton
-              client={client}
-              appMetadata={{
-                name: "Example App",
-                url: "https://example.com",
-              }}
-            />
+            <GetStartedButton />
           </div>
         </div>
         <PredictionMarketPreview />
