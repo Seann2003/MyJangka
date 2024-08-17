@@ -1,6 +1,4 @@
 import Image from "next/image";
-import { ConnectButton } from "thirdweb/react";
-import { client } from "./client";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { GetStartedButton } from "@/components/getStartedButton";
 import PredictionMarketPreview from "@/components/predictionMarketPreview";
