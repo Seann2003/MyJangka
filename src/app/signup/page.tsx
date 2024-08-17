@@ -7,6 +7,7 @@ const SignUp: React.FC = () => {
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [ic, setIC] = useState<string>('');
     const [walletAddress, setWalletAddress] = useState<string>('');
     const router = useRouter(); // Initialize router
 
@@ -22,14 +23,17 @@ const SignUp: React.FC = () => {
           };
       
           const walletResponse = await axios.post(
-            'https://service-testnet.maschain.com/api/wallet/wallet',
-            { name: name },
+            'https://service-testnet.maschain.com/api/wallet/create-user',{ 
+                name: name,
+                email: email,
+                ic: ic
+            },
             { headers: header }
           );
       
           // Corrected equality check for the status code
           if (walletResponse.status === 200) {
-            const address = walletResponse.data.result.address;
+            const address = walletResponse.data.result.wallet.wallet_address;
             setWalletAddress(address);
             console.log(address);
             // Second API call to sign up the user
@@ -37,9 +41,9 @@ const SignUp: React.FC = () => {
               username: name,
               email: email,
               password: password,
-              walletAddress: walletAddress
+              walletAddress: address
             });
-            if(response.status === 200){
+            if(response.status === 201){
                 router.push('/login'); // Change to your desired path
                 console.log('Sign-up successful:', response.data);
             }else{
@@ -91,7 +95,18 @@ const SignUp: React.FC = () => {
                             required
                         />
                     </div>
-                    <button type="submit" className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow-sm text-black hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <div className="mb-6">
+                        <label htmlFor="ic" className="block text-sm font-medium text-gray-700">IC Number:</label>
+                        <input
+                            id="ic"
+                            type="text"
+                            value={ic}
+                            onChange={(e) => setIC(e.target.value)}
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none text-black focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="w-full py-2 px-4 bg-indigo-600 font-semibold rounded-md shadow-sm text-black hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Sign Up
                     </button>
                 </form>

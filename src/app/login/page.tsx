@@ -84,6 +84,7 @@ const LoginPage: React.FC = () => {
                     
                     <button
                         type="submit"
+                        className='bg-slate-700'
                     >
                         Login
                     </button>
