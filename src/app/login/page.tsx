@@ -1,23 +1,23 @@
-"use client"
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
+"use client";
+import React, { useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const LoginPage: React.FC = () => {
-    const router = useRouter(); // Initialize router
+  const router = useRouter(); // Initialize router
 
-    const [formData, setFormData] = useState({
-        email: "",
-        password: ""
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState(""); // State for error messages
+
+  const handleChange = (e: { target: { name: string; value: string } }) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
-    const [error, setError] = useState(""); // State for error messages
-
-    const handleChange = (e: { target: { name: string; value: string; }; }) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    };
+  };
 
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault(); 
@@ -91,8 +91,8 @@ const LoginPage: React.FC = () => {
                     </button>
                 </form>
             </div>
-        </section>
-    );
-}
+    </section>
+  );
+};
 
 export default LoginPage;

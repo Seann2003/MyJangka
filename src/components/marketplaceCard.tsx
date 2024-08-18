@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
@@ -36,6 +36,23 @@ export const MarketplaceGridItem = ({
   no?: number;
   icon?: string | StaticImport;
 }) => {
+  const [showYesOverlay, setShowYesOverlay] = useState(false);
+  const [showNoOverlay, setShowNoOverlay] = useState(false);
+  const [betAmount, setBetAmount] = useState("");
+
+  const handleYesClick = () => {
+    setShowYesOverlay(true);
+  };
+
+  const handleNoClick = () => {
+    setShowNoOverlay(true);
+  };
+
+  const closeOverlay = () => {
+    setShowYesOverlay(false);
+    setShowNoOverlay(false);
+  };
+
   return (
     <div
       className={cn(
@@ -51,14 +68,78 @@ export const MarketplaceGridItem = ({
       <div className="gap-4 flex flex-col">
         <Progress value={((yes ?? 0) / (totalParticipants ?? 1)) * 100} />
         <div className="flex flex-row gap-4">
-          <button className="px-3 py-1 w-full rounded-md hover:bg-green-500 hover:text-white font-light transition duration-200 bg-secondary text-green-500 border-2">
+          <button
+            onClick={handleYesClick}
+            className="px-3 py-1 w-full rounded-md hover:bg-green-500 hover:text-white font-light transition duration-200 bg-secondary text-green-500 border-2"
+          >
             Predict Yes
           </button>
 
-          <button className="px-3 py-1 w-full rounded-md hover:bg-red-500 hover:text-white font-light transition duration-200 bg-secondary text-red-500 border-2">
+          <button
+            onClick={handleNoClick}
+            className="px-3 py-1 w-full rounded-md hover:bg-red-500 hover:text-white font-light transition duration-200 bg-secondary text-red-500 border-2"
+          >
             Predict No
           </button>
         </div>
+        {/* Overlay for Yes */}
+        {showYesOverlay && (
+          <div className="overlay">
+            <div className="overlay-content flex flex-col gap-2">
+              <h2>Enter Predict Amount for Yes</h2>
+              <div className="flex flex-row gap-2">
+                <input
+                  type="number"
+                  value={betAmount}
+                  onChange={(e) => setBetAmount(e.target.value)}
+                />
+                <div className="flex flex-row gap-5">
+                  <button
+                    onClick={closeOverlay}
+                    className="bg-blue-500 py-1 px-2 rounded-lg"
+                  >
+                    Submit
+                  </button>
+                  <button
+                    onClick={closeOverlay}
+                    className="border-gray-400 py-1 px-2 rounded-lg"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Overlay for No */}
+        {showNoOverlay && (
+          <div className="overlay">
+            <div className="overlay-content flex flex-col gap-2">
+              <h2>Enter Bet Amount for No</h2>
+              <div className="flex flex-row gap-2">
+                <input
+                  type="number"
+                  value={betAmount}
+                  onChange={(e) => setBetAmount(e.target.value)}
+                />
+                <div className="flex flex-row gap-4">
+                  <button
+                    onClick={closeOverlay}
+                    className="bg-blue-500 py-1 px-2 rounded-lg"
+                  >
+                    Submit
+                  </button>
+                  <button
+                    onClick={closeOverlay}
+                    className="border-gray-400 py-1 px-2 rounded-lg"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="flex flex-row items-center justify-between mt-auto text-sm">
           <div className="font-sans font-medium text-neutral-600 dark:text-neutral-300 flex items-center">
             <MdPerson className="h-5 w-5 mr-1" />

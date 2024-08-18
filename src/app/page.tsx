@@ -1,9 +1,11 @@
+"use client";
 import Image from "next/image";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { GetStartedButton } from "@/components/getStartedButton";
 import PredictionMarketPreview from "@/components/predictionMarketPreview";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import WhatisMyJangka from "@/components/whatismyjangka";
 
 export default function Home() {
   return (
@@ -33,6 +35,9 @@ export default function Home() {
             <div className="flex justify-center mb-20 z-10">
               <GetStartedButton />
             </div>
+          </div>
+          <div id="about">
+            <WhatisMyJangka />
           </div>
           <div id="market">
             <PredictionMarketPreview />
