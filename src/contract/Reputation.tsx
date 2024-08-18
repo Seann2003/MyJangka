@@ -7,7 +7,7 @@ import { getCustomContract } from "./config";
 const address = useActiveAccount()?.address;
     
 // Reputation Contract
-const reputationContract = getCustomContract("0xF9fFEB5C783315e05bd7D6cE4d67dD793e1138aE")
+const reputationContract = getCustomContract("0xf3fbf6f7EB73517fed2078B873933AF32D5db612")
 
 export const getAccountReputation = () => {
     // Get User Reputation Score
@@ -24,6 +24,26 @@ export const getAccountTotalBets = () => {
     const { data, isLoading } = useReadContract({ 
         contract: reputationContract, 
         method: "function getTotalBets(address user) view returns (uint256)", 
+        params: address ? [address] : ['']
+    });
+    return { data, isLoading };
+}
+
+export const getAccountTotalWinnings = () => {
+    // Get User Total Winnings
+    const { data, isLoading } = useReadContract({ 
+        contract: reputationContract, 
+        method: "function getTotalWinnings(address user) view returns (uint256)",  
+        params: address ? [address] : ['']
+    });
+    return { data, isLoading };
+}
+
+export const getAccountTotalWins = () => {
+    // Get User Total Wins
+    const { data, isLoading } = useReadContract({ 
+        contract: reputationContract, 
+        method: "function getTotalWins(address user) view returns (uint256)", 
         params: address ? [address] : ['']
     });
     return { data, isLoading };

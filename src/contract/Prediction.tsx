@@ -1,16 +1,39 @@
 "use client"
-import { useReadContract, useSendTransaction } from "thirdweb/react";
+import { useContractEvents, useReadContract, useSendTransaction } from "thirdweb/react";
 import { getCustomContract } from "./config";
-import { prepareContractCall } from "thirdweb";
+import { prepareContractCall, prepareEvent } from "thirdweb";
     
 // Prediction Contract
-const predictionContract = getCustomContract("0xF9fFEB5C783315e05bd7D6cE4d67dD793e1138aE")
+const predictionContract = getCustomContract("0x2370683e272947D28f81D0A2dB2e9dc7a6B7e0f0")
+
+// Emitted event
+const preparedEvent = prepareEvent({ 
+    signature: "event UserParticipated(address indexed user, uint256 indexed eventId)" 
+});
+  
+export const userParticipated = () => {
+    const { data: event } = useContractEvents({ 
+        contract: predictionContract, 
+        events: [preparedEvent] 
+    });
+    return { event }
+}
+
 
 export const getEvent = (eventId: bigint) => {
     const { data, isLoading } = useReadContract({ 
         contract: predictionContract, 
         method: "function events(uint256) view returns (string title, bool isOpen, bool outcomeSet, bool outcome, uint256 totalAmount, uint256 totalPositiveBet, uint256 totalNegativeBet, uint256 reputationRequirement)", 
         params: [eventId] 
+      });
+    return { data, isLoading };
+}
+
+export const getEventCount = () => {
+    const { data, isLoading } = useReadContract({ 
+        contract: predictionContract, 
+        method: "function getEventCount() view returns (uint256 eventCount)", 
+        params: [] 
       });
     return { data, isLoading };
 }
