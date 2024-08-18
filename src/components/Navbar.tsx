@@ -24,12 +24,21 @@ export default function Navbar() {
               <a href="#">About</a>
               <a href="#market">Marketplace</a>
               <a href="#footer">Contact Us</a>
-              <a href="" className="border border-white rounded-lg px-3 py-1">
+              <a
+                href=""
+                className="border border-white rounded-lg px-3 py-1"
+                onClick={() => {
+                  router.push("/signup");
+                }}
+              >
                 Sign Up
               </a>
               <a
                 href=""
                 className="border border-white bg-white text-black rounded-lg px-3 py-1"
+                onClick={() => {
+                  router.push("/login");
+                }}
               >
                 Login
               </a>
