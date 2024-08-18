@@ -1,22 +1,59 @@
 import { cn } from "@/lib/utils";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   MarketplaceGrid,
   MarketplaceGridItem,
 } from "@/components/marketplaceCard";
+import { getEvent, getEventCount } from "@/contract/Prediction";
+
+interface Event {
+  title: string;
+  totalParticipants: number;
+  totalAmount: string;
+  yes: number;
+  no: number;
+  icon: string;
+}
 
 export default function MarketPlace() {
+  const [events, setEvents] = useState<Event[]>([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const { data: eventCount } = getEventCount(); // Get the total number of events
+      if (eventCount) {
+        const eventsList = [];
+        for (let i = 0n; i < eventCount; i++) {
+          const { data: eventData } = getEvent(i); // Fetch each event by its ID
+          if (eventData) {
+            eventsList.push({
+              title: eventData.title,
+              totalParticipants: Number(eventData.totalParticipants),
+              totalAmount: (Number(eventData.totalAmount) / 1e18).toFixed(2), // Convert wei to Ether
+              yes: Number(eventData.totalPositiveBet),
+              no: Number(eventData.totalNegativeBet),
+              icon: "/Coat_of_arms_of_Malaysia.svg.png",
+            });
+          }
+        }
+        setEvents(eventsList);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
   return (
     <MarketplaceGrid className="max-w-4xl mx-auto h-auto">
-      {items.map((item, i) => (
+      {events.map((event, i) => (
         <MarketplaceGridItem
           key={i}
-          title={item.title}
-          totalParticipants={item.totalParticipants}
-          totalAmount={item.totalAmount}
-          yes={item.yes}
-          no={item.no}
-          icon={item.icon}
+          title={event.title}
+          totalParticipants={event.totalParticipants}
+          totalAmount={event.totalAmount}
+          yes={event.yes}
+          no={event.no}
+          icon={event.icon}
           className="my-10"
         />
       ))}

@@ -6,6 +6,8 @@ contract Reputation {
     struct User {
         uint256 reputationPoints;
         uint256 totalBets;
+        uint256 totalWins;
+        uint256 totalWinnings;
     }
 
     mapping(address => User) private users;
@@ -34,5 +36,15 @@ contract Reputation {
     // Get user reputation
     function getReputation(address user) public view returns (uint256) {
         return users[user].reputationPoints;
+    }
+
+    // Get user total wins
+    function getTotalWins(address user) public view returns (uint256) {
+        return users[user].totalWins;
+    }
+
+    // Get user total winnings
+    function getTotalWinnings(address user) public view returns (uint256) {
+        return users[user].totalWinnings;
     }
 }
