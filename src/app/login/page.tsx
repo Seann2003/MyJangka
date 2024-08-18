@@ -28,7 +28,7 @@ const LoginPage: React.FC = () => {
                 const address = response.data.user.address;
                 localStorage.setItem('username', username.toString());
                 localStorage.setItem('address', address.toString());
-
+                router.push('/market');
             })
             .catch((err) => {
                 setError("Incorrect email/password");
@@ -85,6 +85,7 @@ const LoginPage: React.FC = () => {
                     
                     <button
                         type="submit"
+                        className='bg-black'
                     >
                         Login
                     </button>
