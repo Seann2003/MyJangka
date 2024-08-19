@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-// Interface to access "VerifyOrigin" contract
+// Interface to access "Reputation" contract
 interface IReputationSystem {
     function getReputation(address user) external view returns (uint256);
 }
@@ -19,6 +19,7 @@ contract Prediction {
         bool isOpen;            // Whether the event is open for betting
         bool outcomeSet;        // Whether the outcome of the event has been set
         bool outcome;
+        uint256 totalParticipants;
         uint256 totalAmount;
         uint256 totalPositiveBet;
         uint256 totalNegativeBet;
@@ -27,10 +28,18 @@ contract Prediction {
     }
 
     Event[] public events;
-    address public reputationAddress;
+    uint256 private eventLength;
+    address private reputationAddress;
+
+    // Event to log user participation
+    event UserParticipated(address indexed user, uint indexed eventId);
 
     constructor(address _reputationAddress) {
         reputationAddress = _reputationAddress;
+    }
+
+    function getEventCount() public view  returns (uint eventCount){
+        return eventLength;
     }
 
     function createEvent(string memory title) public {
@@ -39,6 +48,9 @@ contract Prediction {
         newEvent.isOpen = true;
         newEvent.outcomeSet = false;
         newEvent.totalAmount = 0;
+        newEvent.totalParticipants = 0;
+        newEvent.totalNegativeBet = 0;
+        newEvent.totalPositiveBet = 0;
         newEvent.reputationRequirement = 0;
     }
 
@@ -78,6 +90,8 @@ contract Prediction {
                 amount: msg.value,
                 claimed: false
             });
+            // Emit event to log the user's participation
+            emit UserParticipated(msg.sender, eventId);
         }
         uint256 betAmount = msg.value * 95 / 100;
         if (predictedOutcome) {
