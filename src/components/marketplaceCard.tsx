@@ -4,6 +4,10 @@ import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
 import { MdPerson } from "react-icons/md";
 import { Progress } from "@/components/ui/progress";
+import { getCustomContract } from "@/contract/config";
+import { useSendTransaction } from "thirdweb/react";
+import { prepareContractCall } from "thirdweb";
+import { usePredict } from "@/contract/usePredict";
 
 export const MarketplaceGrid = ({
   className,
@@ -53,6 +57,16 @@ export const MarketplaceGridItem = ({
     setShowNoOverlay(false);
   };
 
+  const predictionContract = getCustomContract("0x2370683e272947D28f81D0A2dB2e9dc7a6B7e0f0");
+  const { predict } = usePredict(predictionContract); // Use custom hook
+
+  const handleSubmit = (predictedOutcome: boolean) => {
+    // Convert betAmount to bigint
+    const amountInBigInt = BigInt(Number(betAmount) * 1e18); // Convert to wei
+    predict(0n, predictedOutcome, amountInBigInt)
+    closeOverlay();
+  };
+
   return (
     <div
       className={cn(
@@ -95,7 +109,7 @@ export const MarketplaceGridItem = ({
                 />
                 <div className="flex flex-row gap-5">
                   <button
-                    onClick={closeOverlay}
+                    onClick={() => handleSubmit(true)}
                     className="bg-blue-500 py-1 px-2 rounded-lg"
                   >
                     Submit
@@ -124,7 +138,7 @@ export const MarketplaceGridItem = ({
                 />
                 <div className="flex flex-row gap-4">
                   <button
-                    onClick={closeOverlay}
+                    onClick={() => handleSubmit(false)}
                     className="bg-blue-500 py-1 px-2 rounded-lg"
                   >
                     Submit
@@ -145,7 +159,7 @@ export const MarketplaceGridItem = ({
             <MdPerson className="h-5 w-5 mr-1" />
             <span>{totalParticipants}</span>
           </div>
-          <div> {totalAmount} Bet</div>
+          <div> {totalAmount} Pool</div>
         </div>
       </div>
     </div>

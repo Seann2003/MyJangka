@@ -69,7 +69,7 @@ export const CardItem = ({
             <MdPerson className="h-5 w-5 mr-1" />
             <span>{totalParticipants}</span>
           </div>
-          <div> {totalAmount} Bet</div>
+          <div> {totalAmount} Pool</div>
         </div>
       </div>
     </div>

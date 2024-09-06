@@ -46,6 +46,7 @@ export default function Profile() {
             <div className="py-2 px-4 cursor-pointer hover:bg-slate-100">
               Settings
             </div>
+            <a className="py-2 px-4 cursor-pointer hover:bg-slate-100" href="/mintcert">Get Certificate</a>
             <div className="py-2 px-4 cursor-pointer hover:bg-slate-100">
               Log Out
             </div>
