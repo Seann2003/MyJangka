@@ -5,9 +5,9 @@ import Image from "next/image";
 import { MdPerson } from "react-icons/md";
 import { Progress } from "@/components/ui/progress";
 import { getCustomContract } from "@/contract/config";
-import { useSendTransaction } from "thirdweb/react";
-import { prepareContractCall } from "thirdweb";
 import { usePredict } from "@/contract/usePredict";
+import { useRouter } from 'next/navigation';
+
 
 export const MarketplaceGrid = ({
   className,
@@ -62,10 +62,13 @@ export const MarketplaceGridItem = ({
 
   const handleSubmit = (predictedOutcome: boolean) => {
     // Convert betAmount to bigint
+    alert(`You have bought ${betAmount} shares!`)
     const amountInBigInt = BigInt(Number(betAmount) * 1e18); // Convert to wei
     predict(0n, predictedOutcome, amountInBigInt)
     closeOverlay();
   };
+
+  const { push } = useRouter();
 
   return (
     <div
@@ -75,7 +78,8 @@ export const MarketplaceGridItem = ({
     >
       <div className=" transition duration-200">
         {icon && <Image src={icon} alt="icon" width={60} height={60} />}
-        <div className="font-sans font-bold text-neutral-600 dark:text-neutral-200 mb-2 mt-2">
+        <div className="font-sans font-bold text-neutral-600 dark:text-neutral-200 mb-2 mt-2"       onClick={()=>{push('/japangdp');}}
+        >
           {title}
         </div>
       </div>
@@ -86,14 +90,14 @@ export const MarketplaceGridItem = ({
             onClick={handleYesClick}
             className="px-3 py-1 w-full rounded-md hover:bg-green-500 hover:text-white font-light transition duration-200 bg-secondary text-green-500 border-2"
           >
-            Predict Yes
+            Predict Higher
           </button>
 
           <button
             onClick={handleNoClick}
             className="px-3 py-1 w-full rounded-md hover:bg-red-500 hover:text-white font-light transition duration-200 bg-secondary text-red-500 border-2"
           >
-            Predict No
+            Predict Lower
           </button>
         </div>
         {/* Overlay for Yes */}
