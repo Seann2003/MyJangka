@@ -1,6 +1,8 @@
 "use client";
+import { client } from "@/app/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { ConnectButton } from "thirdweb/react";
 
 export default function Navbar() {
   const router = useRouter();
@@ -19,26 +21,26 @@ export default function Navbar() {
                 router.push("/");
               }}
             />
-
+            <ConnectButton
+              client={client}
+              appMetadata={{
+                name: "Example App",
+                url: "https://example.com",
+             }}
+            />
             <div className="flex space-x-4 text-white justify-center items-center">
               <a href="#">About</a>
               <a href="#market">Marketplace</a>
               <a href="#footer">Contact Us</a>
               <a
-                href=""
+                href="/signup"
                 className="border border-white rounded-lg px-3 py-1"
-                onClick={() => {
-                  router.push("/signup");
-                }}
               >
                 Sign Up
               </a>
               <a
-                href=""
+                href="/login"
                 className="border border-white bg-white text-black rounded-lg px-3 py-1"
-                onClick={() => {
-                  router.push("/login");
-                }}
               >
                 Login
               </a>

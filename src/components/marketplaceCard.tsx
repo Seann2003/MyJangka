@@ -4,6 +4,10 @@ import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
 import { MdPerson } from "react-icons/md";
 import { Progress } from "@/components/ui/progress";
+import { getCustomContract } from "@/contract/config";
+import { usePredict } from "@/contract/usePredict";
+import { useRouter } from 'next/navigation';
+
 
 export const MarketplaceGrid = ({
   className,
@@ -53,6 +57,19 @@ export const MarketplaceGridItem = ({
     setShowNoOverlay(false);
   };
 
+  const predictionContract = getCustomContract("0x2370683e272947D28f81D0A2dB2e9dc7a6B7e0f0");
+  const { predict } = usePredict(predictionContract); // Use custom hook
+
+  const handleSubmit = (predictedOutcome: boolean) => {
+    // Convert betAmount to bigint
+    alert(`You have bought ${betAmount} shares!`)
+    const amountInBigInt = BigInt(Number(betAmount) * 1e18); // Convert to wei
+    predict(0n, predictedOutcome, amountInBigInt)
+    closeOverlay();
+  };
+
+  const { push } = useRouter();
+
   return (
     <div
       className={cn(
@@ -61,7 +78,8 @@ export const MarketplaceGridItem = ({
     >
       <div className=" transition duration-200">
         {icon && <Image src={icon} alt="icon" width={60} height={60} />}
-        <div className="font-sans font-bold text-neutral-600 dark:text-neutral-200 mb-2 mt-2">
+        <div className="font-sans font-bold text-neutral-600 dark:text-neutral-200 mb-2 mt-2"       onClick={()=>{push('/japangdp');}}
+        >
           {title}
         </div>
       </div>
@@ -72,14 +90,14 @@ export const MarketplaceGridItem = ({
             onClick={handleYesClick}
             className="px-3 py-1 w-full rounded-md hover:bg-green-500 hover:text-white font-light transition duration-200 bg-secondary text-green-500 border-2"
           >
-            Predict Yes
+            Predict Higher
           </button>
 
           <button
             onClick={handleNoClick}
             className="px-3 py-1 w-full rounded-md hover:bg-red-500 hover:text-white font-light transition duration-200 bg-secondary text-red-500 border-2"
           >
-            Predict No
+            Predict Lower
           </button>
         </div>
         {/* Overlay for Yes */}
@@ -95,7 +113,7 @@ export const MarketplaceGridItem = ({
                 />
                 <div className="flex flex-row gap-5">
                   <button
-                    onClick={closeOverlay}
+                    onClick={() => handleSubmit(true)}
                     className="bg-blue-500 py-1 px-2 rounded-lg"
                   >
                     Submit
@@ -124,7 +142,7 @@ export const MarketplaceGridItem = ({
                 />
                 <div className="flex flex-row gap-4">
                   <button
-                    onClick={closeOverlay}
+                    onClick={() => handleSubmit(false)}
                     className="bg-blue-500 py-1 px-2 rounded-lg"
                   >
                     Submit
@@ -145,7 +163,7 @@ export const MarketplaceGridItem = ({
             <MdPerson className="h-5 w-5 mr-1" />
             <span>{totalParticipants}</span>
           </div>
-          <div> {totalAmount} Bet</div>
+          <div> {totalAmount} Pool</div>
         </div>
       </div>
     </div>
