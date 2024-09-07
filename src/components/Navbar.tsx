@@ -1,10 +1,47 @@
 "use client";
 import { client } from "@/app/client";
 import Image from "next/image";
+import * as Web3 from "@solana/web3.js";
+import AppWalletProvider from "@/components/AppWalletProvider";
 import { useRouter } from "next/navigation";
-import { ConnectButton } from "thirdweb/react";
+import dynamic from "next/dynamic";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useEffect, useState } from "react";
+
+const WalletMultiButtonDynamic = dynamic(
+  () => import('@solana/wallet-adapter-react-ui').then(mod => mod.WalletMultiButton),
+  { ssr: false }
+);
+
 
 export default function Navbar() {
+  const { publicKey } = useWallet();
+  const [balance, setBalance] = useState(0);  
+  const [address, setAddress] = useState<string>("");
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      if (publicKey) {
+        const address = publicKey.toBase58();
+        setAddress(address);
+
+        try {
+          const connection = new Web3.Connection(Web3.clusterApiUrl("devnet"));
+          const balance = await connection.getBalance(publicKey);
+          setBalance(balance / Web3.LAMPORTS_PER_SOL);
+        } catch (error) {
+          console.error("Error fetching balance:", error);
+          setBalance(0);
+        }
+      } else {
+        setAddress("");
+        setBalance(0);
+      }
+    };
+
+    fetchBalance();
+  }, [publicKey]);
+
   const router = useRouter();
   return (
     <>
@@ -21,18 +58,12 @@ export default function Navbar() {
                 router.push("/");
               }}
             />
-            <ConnectButton
-              client={client}
-              appMetadata={{
-                name: "Example App",
-                url: "https://example.com",
-             }}
-            />
+            <WalletMultiButtonDynamic/>
             <div className="flex space-x-4 text-white justify-center items-center">
               <a href="#">About</a>
               <a href="#market">Marketplace</a>
               <a href="#footer">Contact Us</a>
-              <a
+              {/* <a
                 href="/signup"
                 className="border border-white rounded-lg px-3 py-1"
               >
@@ -43,9 +74,12 @@ export default function Navbar() {
                 className="border border-white bg-white text-black rounded-lg px-3 py-1"
               >
                 Login
-              </a>
+              </a> */}
+              <p>{`Balance: ${balance} SOL`}</p>
+
             </div>
           </div>
+
         </div>
       </nav>
     </>

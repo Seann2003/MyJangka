@@ -76,9 +76,9 @@ export const MarketplaceGridItem = ({
         "mb-4 rounded-xl hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-4 dark:bg-black dark:border-white/[0.2] bg-white border border-transparent justify-between w-full flex flex-col hover: hover:brightness-110"
       )}
     >
-      <div className=" transition duration-200">
+      <div className=" transition duration-200" onClick={()=>{push('/japangdp');}}>
         {icon && <Image src={icon} alt="icon" width={60} height={60} />}
-        <div className="font-sans font-bold text-neutral-600 dark:text-neutral-200 mb-2 mt-2"       onClick={()=>{push('/japangdp');}}
+        <div className="font-sans font-bold text-neutral-600 dark:text-neutral-200 mb-2 mt-2"
         >
           {title}
         </div>
@@ -104,7 +104,7 @@ export const MarketplaceGridItem = ({
         {showYesOverlay && (
           <div className="overlay">
             <div className="overlay-content flex flex-col gap-2">
-              <h2>Enter Predict Amount for Yes</h2>
+              <h2>Enter Predict Amount for Higher</h2>
               <div className="flex flex-row gap-2">
                 <input
                   type="number"
@@ -133,7 +133,7 @@ export const MarketplaceGridItem = ({
         {showNoOverlay && (
           <div className="overlay">
             <div className="overlay-content flex flex-col gap-2">
-              <h2>Enter Bet Amount for No</h2>
+              <h2>Enter Bet Amount for Lower</h2>
               <div className="flex flex-row gap-2">
                 <input
                   type="number"

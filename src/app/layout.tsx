@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import AppWalletProvider from "@/components/AppWalletProvider";
 import { ThirdwebProvider } from "thirdweb/react";
 import { ThemeProvider } from "next-themes";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,6 +12,8 @@ export const metadata: Metadata = {
   description:
     "Starter template for using thirdweb SDK with Next.js App router",
 };
+
+
 
 export default function RootLayout({
   children,
@@ -23,7 +24,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="dark">
-          <ThirdwebProvider>{children}</ThirdwebProvider>
+          <ThirdwebProvider>
+            <AppWalletProvider>{children}</AppWalletProvider>
+            
+          </ThirdwebProvider>
         </ThemeProvider>
       </body>
     </html>
